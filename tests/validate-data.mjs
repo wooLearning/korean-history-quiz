@@ -27,6 +27,20 @@ if (bank.sets.length !== 10) fail(`expected 10 sets, got ${bank.sets.length}`);
 const ids = new Set();
 const eras = new Set();
 let total = 0;
+const bannedPromptPatterns = [
+  "이 항목",
+  "해당 항목",
+  "핵심 정답",
+  "OX",
+  "가리키는 정답",
+  "빠른 암기",
+  "기출형 빈칸",
+  "지엽 확인",
+  "회독:",
+  "설명에 해당하는 용어·인물·사건",
+  "자주 묻는다",
+  "문제다",
+];
 for (const [setIndex, set] of bank.sets.entries()) {
   if (!set.id || !set.title) fail(`set ${setIndex + 1} needs id and title`);
   if (!Array.isArray(set.questions)) fail(`${set.id} must contain questions`);
@@ -40,6 +54,9 @@ for (const [setIndex, set] of bank.sets.entries()) {
     if (!question.era) fail(`${label} is missing era`);
     if (!question.topic) fail(`${label} is missing topic`);
     if (!question.prompt?.includes("____")) fail(`${label} prompt must include a blank marker`);
+    for (const banned of bannedPromptPatterns) {
+      if (question.prompt.includes(banned)) fail(`${label} contains machine-like wording: ${banned}`);
+    }
     if (!question.answer) fail(`${label} is missing answer`);
     if (!question.explanation || question.explanation.length < 12) fail(`${label} needs a useful explanation`);
     eras.add(question.era);

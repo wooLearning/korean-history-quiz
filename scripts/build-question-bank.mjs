@@ -135,32 +135,26 @@ const setTitles = [
 
 const normalizeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-const mask = (text, question) => {
+const clozeFromExplanation = (question) => {
   const terms = [question.answer, ...(question.aliases || [])]
-    .filter(Boolean)
+    .filter((term) => term && term.length >= 2 && question.explanation.includes(term))
     .sort((a, b) => b.length - a.length);
-  return terms.reduce((result, term) => {
-    if (term.length < 2) return result;
-    const escaped = normalizeRegExp(term);
-    return result
-      .replace(new RegExp(`${escaped}[을를]`, "g"), "이 항목을")
-      .replace(new RegExp(`${escaped}[이가]`, "g"), "이 항목이")
-      .replace(new RegExp(`${escaped}[은는]`, "g"), "이 항목은")
-      .replace(new RegExp(`${escaped}[과와]`, "g"), "이 항목과")
-      .replace(new RegExp(`${escaped}(으로|로)`, "g"), "이 항목으로")
-      .replace(new RegExp(escaped, "g"), "이 항목");
-  }, text);
+
+  if (!terms.length) return question.prompt;
+
+  const escaped = normalizeRegExp(terms[0]);
+  return question.explanation.replace(new RegExp(escaped, "g"), "____");
 };
 
 const variants = [
   (q) => q.prompt,
-  (q) => `다음 설명에 해당하는 용어·인물·사건은 ____이다. ${mask(q.explanation, q)}`,
-  (q) => `${q.era} ${q.topic} 회독: ${mask(q.explanation, q)} 이 설명의 핵심 정답은 ____이다.`,
-  (q) => `기출형 빈칸: ${q.prompt} 관련 해설은 "${mask(q.explanation, q)}"이다.`,
-  (q) => `${q.topic}에서 "${mask(q.explanation, q)}"와 가장 직접 관련되는 말은 ____이다.`,
-  (q) => `지엽 확인: ${q.era} 단원에서 ${mask(q.explanation, q)} 빈칸에 들어갈 핵심어는 ____이다.`,
-  (q) => `빠른 암기: ${mask(q.prompt, q)} 위 문장의 빈칸 정답은 ____이다.`,
-  (q) => `OX를 고친다고 생각하고 답하라. ${mask(q.explanation, q)} 이 사실을 가리키는 정답은 ____이다.`,
+  (q) => clozeFromExplanation(q),
+  (q) => `다음 설명의 빈칸에 들어갈 말은? ${clozeFromExplanation(q)}`,
+  (q) => `다음 설명에서 빠진 말을 쓰시오. ${clozeFromExplanation(q)}`,
+  (q) => `다음은 ${q.topic}에 관한 설명이다. 빈칸에 들어갈 말은? ${clozeFromExplanation(q)}`,
+  (q) => `빈칸에 들어갈 알맞은 용어를 쓰시오. ${clozeFromExplanation(q)}`,
+  (q) => `다음 문장의 빈칸을 채우시오. ${q.prompt}`,
+  (q) => `밑줄 친 빈칸에 들어갈 알맞은 말은? ${clozeFromExplanation(q)}`,
 ];
 
 const buildQuestion = (setIndex, number) => {
