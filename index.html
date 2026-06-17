@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>공무원 한국사 빈칸 퀴즈</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">공무원 한국사 대비</p>
+          <h1>빈칸 채우기</h1>
+        </div>
+        <p class="top-note">100문제 단위 10세트</p>
+      </header>
+
+      <main class="layout">
+        <aside class="controls" aria-label="문제 설정">
+          <section class="summary-grid" aria-label="풀이 요약">
+            <div class="summary-item">
+              <span>정답</span>
+              <strong id="scoreText">0 / 0</strong>
+            </div>
+            <div class="summary-item">
+              <span>진행률</span>
+              <strong id="progressText">0%</strong>
+            </div>
+          </section>
+
+          <section class="filter-panel">
+            <label>
+              세트
+              <select id="setFilter"></select>
+            </label>
+            <label>
+              시대
+              <select id="eraFilter"></select>
+            </label>
+            <label>
+              검색
+              <input id="searchInput" type="search" placeholder="대동법, 고구려, 헌법" />
+            </label>
+          </section>
+
+          <div class="quick-actions">
+            <button id="shuffleButton" type="button">섞기</button>
+            <button id="resetButton" type="button">기록 초기화</button>
+          </div>
+
+          <div class="progress-wrap">
+            <div class="progress-label">
+              <span>현재 목록</span>
+              <span id="countText">0문제</span>
+            </div>
+            <div class="progress-bar" aria-hidden="true"><span id="progressBar"></span></div>
+          </div>
+        </aside>
+
+        <section class="quiz-shell" aria-label="퀴즈">
+          <div class="set-strip">
+            <strong id="setTitleText">세트</strong>
+            <span>2026 필기 + 2027 한능검 전환 대비</span>
+          </div>
+
+          <article class="question-card">
+            <div class="quiz-meta">
+              <span id="positionText">문제 1</span>
+              <span id="eraText">시대</span>
+              <span id="topicText">주제</span>
+            </div>
+            <p id="questionText" class="question">문제를 불러오는 중입니다.</p>
+            <form id="answerForm" class="answer-form">
+              <input id="answerInput" type="text" autocomplete="off" placeholder="정답을 입력하세요" />
+              <button type="submit">채점</button>
+            </form>
+            <div id="feedback" class="feedback" aria-live="polite"></div>
+            <div class="bottom-actions">
+              <button id="showAnswerButton" type="button">정답 보기</button>
+              <button id="prevButton" type="button">이전</button>
+              <button id="nextButton" type="button">다음</button>
+            </div>
+          </article>
+
+          <section class="explanation-panel">
+            <h2>해설</h2>
+            <p id="explanationText">정답을 확인하면 간단한 해설이 표시됩니다.</p>
+          </section>
+
+          <section class="list-panel">
+            <div class="list-head">
+              <h2>문제 목록</h2>
+              <span>맞힌 문제는 목록에서 표시됩니다</span>
+            </div>
+            <ol id="questionList" class="question-list"></ol>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js" type="module"></script>
+  </body>
+</html>

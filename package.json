@@ -1,0 +1,10 @@
+{
+  "name": "korean-history-quiz",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:data": "node scripts/build-question-bank.mjs",
+    "test": "node tests/validate-data.mjs"
+  }
+}
